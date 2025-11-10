@@ -52,14 +52,13 @@ public class Loader : MonoBehaviour
             line = reader.ReadLine();
             split_line = line.Split(" ");
             vertexs[i] =(new Vector3(float.Parse(split_line[0],CultureInfo.InvariantCulture), float.Parse(split_line[1], CultureInfo.InvariantCulture), float.Parse(split_line[2], CultureInfo.InvariantCulture)));
-            normalReference.x = Mathf.Max(normalReference.x,(vertexs[i].x));
-            normalReference.y = Mathf.Max(normalReference.y, (vertexs[i].y));
-            normalReference.z = Mathf.Max(normalReference.z, (vertexs[i].z));
+            normalReference.x = Mathf.Max(normalReference.x, Mathf.Abs(vertexs[i].x));
+            normalReference.y = Mathf.Max(normalReference.y, Mathf.Abs(vertexs[i].y));
+            normalReference.z = Mathf.Max(normalReference.z, Mathf.Abs(vertexs[i].z));
 
             //Pour ne pas repasser dedans lors du calcul de CoG
             CoG += vertexs[i];
 
-            Debug.Log(vertexs[i]);
         }
         //Calcul final de CoG
         CoG = CoG / nbVertex;
@@ -84,9 +83,10 @@ public class Loader : MonoBehaviour
 
         if (normalReference.x > 0 && normalReference.y > 0 && normalReference.z > 0)
         {
+            var max = Mathf.Max(normalReference.x,normalReference.y,normalReference.z);
             for (int u = 0; u < vertexs.Length; u++)
             {
-                //vertexs[u] = new Vector3(vertexs[u].x / normalReference.x, vertexs[u].y / normalReference.y, vertexs[u].z / normalReference.z);
+                vertexs[u] = new Vector3(vertexs[u].x / max, vertexs[u].y / max, vertexs[u].z / max);
             }
         }
 
