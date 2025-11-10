@@ -58,12 +58,15 @@ public class Loader : MonoBehaviour
 
             //Pour ne pas repasser dedans lors du calcul de CoG
             CoG += vertexs[i];
+
+            Debug.Log(vertexs[i]);
         }
         //Calcul final de CoG
         CoG = CoG / nbVertex;
 
 
         //Initialisation de sides
+        int t = 0;
         for (int y = 0; y < nbSides; y++) {
             line = reader.ReadLine();
             split_line = line.Split(" ");
@@ -72,11 +75,13 @@ public class Loader : MonoBehaviour
             //Pour récupérer les valeurs et les convertir en Int dans une liste, on Skip 1 car c'est la taille des sides et pas une valeur
             for (var z= 1; z <= int.Parse(split_line[0]); z++) {
                 
-                triangles[y + z-1] = (int.Parse(split_line[z]));
+                triangles[t] = (int.Parse(split_line[z]));
+                t++;
             }
+            
         }
 
-        Debug.Log(normalReference);
+
         if (normalReference.x > 0 && normalReference.y > 0 && normalReference.z > 0)
         {
             for (int u = 0; u < vertexs.Length; u++)
