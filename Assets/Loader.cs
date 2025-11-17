@@ -18,6 +18,7 @@ public class Loader : MonoBehaviour
     private Vector3[] vertexs;
     private int[] triangles;
     private Vector3 CoG;
+    private Vector3[] normals;
     
     //La coordonné la plus éloigner du centre de gravité
     private Vector3 normalReference = new Vector3(0f,0f,0f); 
@@ -45,6 +46,8 @@ public class Loader : MonoBehaviour
         nbRidges = int.Parse(split_line[2]);
         vertexs = new Vector3[nbVertex];
         triangles = new int[nbSides *3];
+        normals = new Vector3[nbVertex];
+
         
 
         //Initialisation de vertexs
@@ -71,7 +74,7 @@ public class Loader : MonoBehaviour
             split_line = line.Split(" ");
 
 
-            //Pour récupérer les valeurs et les convertir en Int dans une liste, on Skip 1 car c'est la taille des sides et pas une valeur
+            //Pour récupérer les valeurs et les convertir en Int dans une liste, on Skip 0 car c'est la taille des sides et pas une valeur
             for (var z= 1; z <= int.Parse(split_line[0]); z++) {
                 
                 triangles[t] = (int.Parse(split_line[z]));
@@ -91,6 +94,22 @@ public class Loader : MonoBehaviour
         }
 
 
+        //Calcul des normales
+        int s = 0;
+        for ( int v =0; v < normals.Length; v++)
+        {
+            Vector3 p1 = vertexs[triangles[v + s]];
+            Vector3 p2 = vertexs[triangles[v + ++s]];
+            Vector3 p3 = vertexs[triangles[v + ++s]];
+
+            Vector3 v1 = p2 - p1;
+            Vector3 v2 = p3 - p1;
+
+            normals[v] = Vector3.Cross(v1, v2).normalized;
+            
+        }
+
+
     }
 
 
@@ -101,8 +120,9 @@ public class Loader : MonoBehaviour
          
 
 
-
+        
         mesh.vertices = vertexs;
+        mesh.normals = normals;
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
 
