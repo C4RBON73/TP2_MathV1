@@ -113,6 +113,33 @@ public class Loader : MonoBehaviour
     }
 
 
+    private void saveStruct(string name)
+    {
+        // Initialisation du Writer
+        StreamWriter write = new StreamWriter(struct_path.Split(".")[0] + name +".off");
+        Debug.Log(vertexs);
+        Debug.Log(triangles);
+        write.WriteLine("OFF");
+        write.WriteLine(nbVertex +" "+ nbSides +" " + nbRidges);
+
+        for (int i = 0; i < vertexs.Length; i++)
+        {
+            write.WriteLine(vertexs[i][0] + " " + vertexs[i][1] + " " + vertexs[i][2]);
+        }
+
+        
+        for (int y = 0; y < triangles.Length; y++)
+        {
+            write.WriteLine("3 " + triangles[y] + " " + triangles[++y] + " " + triangles[++y] );
+        }
+        Debug.Log(struct_path + " Saved");
+    }
+
+
+
+
+
+
     public void affiche_struct()
     {
         mesh.Clear();
@@ -134,6 +161,9 @@ public class Loader : MonoBehaviour
         loadStructure(struct_path);
 
         affiche_struct();
+
+        saveStruct("VSaved");
+
     }
 
     // Update is called once per frame
